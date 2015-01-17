@@ -80,7 +80,13 @@ Answer: lexical scoping
 Question 8
 How are free variables in R functions resolved?
 
-Answer: The values of free variables are searched for in the global environment
+Answer: The values of free variables are searched for in the environment in which the function was defined
+Tips:
+Searching for the value for a free variable:
+
+If the value of a symbol is not found in the environment n which a function was defined, then the search is continued is the parent environment
+The search continues down the sequence of parent environments until we hit the top-level environment; this usually the global environment (workspace) or the namespace of a package
+After the top-level environment, the search continues down the search list until we hit the empty environment. If a value for a given symbol cannot be found once the empty environment is arrived at, then an error is thrown
 
 Question 9
 What is one of the consequences of the scoping rules used in R?
@@ -90,4 +96,5 @@ Answer: All objects must be stored in memory
 Question 10
 In R, what is the parent frame?
 
-Answer: It is the package search list
+Answer: It is the environment in which a function was called
+Tips: In R the calling environment is known as the parent frame
