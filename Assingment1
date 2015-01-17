@@ -1,0 +1,48 @@
+pollutantmean.R
+
+pollutantmean <- function(directory, pollutant, id = 1:332) {
+  files <- list.files(directory)
+  filepaths <- paste(directory, "/", files, sep="")
+  init <- if (pollutant == "sulfate") {
+    2
+  } else {
+    3
+  }
+  tdata <- matrix(NA,0,4)
+  for (i in id) {
+    data <- read.csv(filepaths[i])
+    tdata <- rbind(tdata, data)
+  }
+  mean(tdata[,init], na.rm=TRUE)
+}
+
+complete.R
+
+complete <- function(directory, id = 1:332) {
+  files <- list.files(directory)
+  filepaths <- paste(directory, "/", files, sep="")
+  m <- matrix(0,0,2)
+  colnames(m)<-c("id","nobs")
+  for (i in id) {
+    data <- read.csv(filepaths[i])
+    m <- rbind(m, c(i,nrow(data[complete.cases(data),])))
+  }
+  tdata <- data.frame(m)
+  tdata
+}
+
+corr.R
+
+corr <- function(directory, threshold = 0) {
+  files <- list.files(directory)
+  filepaths <- paste(directory, "/", files, sep="")
+  cr <- c()
+  for (f in filepaths) {
+    data <- read.csv(f)
+    
+    if(nrow(data[complete.cases(data),]) > threshold){
+      cr <-c(cr,cor(data[complete.cases(data),]$sulfate, data[complete.cases(data),]$nitrate))
+    }
+  }
+  cr
+}
